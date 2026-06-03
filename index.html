@@ -70,7 +70,7 @@
         </div>
 
         <!-- 特殊层排除说明横幅 -->
-        <div class="px-6 py-2.5 bg-yellow-50 border-b border-yellow-105 text-yellow-800 text-xs flex items-center gap-2">
+        <div class="px-6 py-2.5 bg-yellow-50 border-b border-yellow-100 text-yellow-800 text-xs flex items-center gap-2">
             <svg class="w-4 h-4 text-yellow-600 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
             </svg>
@@ -92,7 +92,7 @@
             </div>
             <div class="bg-gray-50 p-4 rounded-xl border border-gray-150 flex flex-col justify-between shadow-sm">
                 <span class="text-xs font-semibold text-red-500 uppercase">未出资户数</span>
-                <span class="text-xl font-bold text-red-650 mt-1" id="stat-unpaid">89户</span>
+                <span class="text-xl font-bold text-red-600 mt-1" id="stat-unpaid">89户</span>
             </div>
             <!-- 支持手动编辑的文本框 -->
             <div class="bg-gray-900 text-white p-4 rounded-xl flex flex-col justify-between shadow-sm group">
@@ -158,7 +158,7 @@
                         <th class="p-3 text-center font-bold text-gray-500">02室</th>
                         <th class="p-3 text-center font-bold text-gray-500">03室</th>
                         <th class="p-3 text-center font-bold text-gray-500">04室</th>
-                        <th class="p-3 text-center font-bold text-gray-505">05室</th>
+                        <th class="p-3 text-center font-bold text-gray-500">05室</th>
                         <th class="p-3 text-center font-bold text-gray-500 w-28">出资进度</th>
                     </tr>
                 </thead>
@@ -191,6 +191,14 @@
     </div>
 
     <script>
+        // 【版本控制系统】如果检测到代码版本升级，直接清除本地缓存的金额数据，实现自动同步更新。
+        const DATA_VERSION = "2026_06_03_v3_final";
+        const savedVersion = localStorage.getItem('app_data_version');
+        if (savedVersion !== DATA_VERSION) {
+            localStorage.setItem('app_data_version', DATA_VERSION);
+            localStorage.setItem('manually_saved_total_amount', '257,003.11'); // 触发强制金额重置
+        }
+
         // 核心登记的 131 户原始房号数据 (数据截止 2026-06-03)
         const ORIGINAL_PAID_LIST = [
             "402", "404", "405", "502", "505", "602", "604", "704", "802", "803", 
@@ -232,7 +240,7 @@
             updateUI();
         }
 
-        // 账面资金：数据截止 2026-06-03 时的默认金额
+        // 账面资金：初始化先尝试读取已存的数据，若无则使用默认最新金
         let totalAmountVal = localStorage.getItem('manually_saved_total_amount') || '257,003.11';
 
         // 监听并实时存储输入的账面数字到本地缓存
@@ -279,7 +287,7 @@
             }
         }
 
-        // 更新各板块出资数据统计 (仅统计出资比例与应缴户，不主动计算金额覆盖手动输入)
+        // 更新各板块出资数据统计
         function updateStats() {
             // 剔除后共有 44 层参与计算
             const totalParticipatingRooms = (48 - EXCLUDED_FLOORS.length) * 5;
@@ -293,4 +301,170 @@
             const unpaidCount = totalParticipatingRooms - activePaidCount;
             const ratio = ((activePaidCount / totalParticipatingRooms) * 100).toFixed(1);
 
-            document.getElementById('stat-total-label').innerText = `${48 - EXCLUDED_FLOORS.length
+            document.getElementById('stat-total-label').innerText = `${48 - EXCLUDED_FLOORS.length}层 / ${totalParticipatingRooms}户`;
+            document.getElementById('stat-paid').innerText = `${activePaidCount} 户`;
+            document.getElementById('stat-paid-ratio').innerText = `(${ratio}%)`;
+            document.getElementById('stat-unpaid').innerText = `${unpaidCount} 户`;
+            
+            // 保证输入框加载正确的值
+            document.getElementById('stat-amount-input').value = totalAmountVal;
+        }
+
+        // 渲染主楼宇表格网格
+        function renderGrid() {
+            const tbody = document.getElementById('grid-rows');
+            tbody.innerHTML = '';
+            
+            let visibleRowsCount = 0;
+
+            for (let f = maxFloor; f >= 1; f--) {
+                // 如果是排除的特殊楼层，不予渲染
+                if (isExcludedFloor(f)) {
+                    continue;
+                }
+
+                const floorRooms = suffixes.map(s => `${f}${s}`);
+                
+                // 计算当前楼层的已交费户数
+                const paidInFloor = floorRooms.filter(r => paidRooms.has(r)).length;
+
+                // 1. 出资率过滤
+                let matchesFilter = true;
+                if (filterType === 'hasUnpaid') {
+                    matchesFilter = paidInFloor < 5;
+                } else if (filterType === 'allPaid') {
+                    matchesFilter = paidInFloor === 5;
+                } else if (filterType === 'nonePaid') {
+                    matchesFilter = paidInFloor === 0;
+                }
+
+                // 2. 搜索过滤（支持 0404 模糊匹配 404）
+                let matchesSearch = true;
+                if (searchQuery !== '') {
+                    const processedQuery = searchQuery.startsWith('0') ? searchQuery.substring(1) : searchQuery;
+                    matchesSearch = floorRooms.some(r => r.includes(searchQuery) || r.includes(processedQuery));
+                }
+
+                // 符合展示逻辑的渲染
+                if (matchesFilter && matchesSearch) {
+                    visibleRowsCount++;
+                    const tr = document.createElement('tr');
+                    tr.className = "hover:bg-gray-55 border-b border-gray-100 transition-colors";
+                    
+                    let roomsTdListHtml = '';
+                    floorRooms.forEach(roomNum => {
+                        const isPaid = paidRooms.has(roomNum);
+                        
+                        // 高亮检索样式
+                        const processedQuery = searchQuery.startsWith('0') ? searchQuery.substring(1) : searchQuery;
+                        const isHighlighted = searchQuery !== '' && (roomNum.includes(searchQuery) || roomNum.includes(processedQuery));
+                        const boxHighlight = isHighlighted ? 'ring-2 ring-indigo-500 ring-offset-1' : '';
+                        
+                        roomsTdListHtml += `
+                            <td class="p-2 text-center">
+                                <button onclick="toggleRoom('${roomNum}')" 
+                                    class="w-full py-2 px-1 relative transition-all rounded-lg border text-xs font-semibold ${boxHighlight} ${
+                                        isPaid 
+                                        ? 'bg-green-50 text-green-700 border-green-200 hover:bg-green-100 hover:border-green-300' 
+                                        : 'bg-gray-55 text-gray-400 border-gray-200 border-dashed hover:bg-gray-100 hover:text-gray-650'
+                                    }"
+                                >
+                                    <div class="flex items-center justify-center gap-1">
+                                        <span>${roomNum}</span>
+                                        ${isPaid 
+                                            ? '<svg class="w-3.5 h-3.5 text-green-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>'
+                                            : '<span class="w-1.5 h-1.5 rounded-full bg-gray-300"></span>'
+                                        }
+                                    </div>
+                                </button>
+                            </td>
+                        `;
+                    });
+
+                    // 进度样式配置
+                    const progressPercent = (paidInFloor / 5) * 100;
+                    const progressColor = paidInFloor === 5 ? 'bg-green-500' : 'bg-indigo-500';
+                    const badgeClass = paidInFloor === 5 ? 'bg-green-100 text-green-800' : 
+                                       paidInFloor === 0 ? 'bg-gray-100 text-gray-500' : 'bg-indigo-50 text-indigo-800';
+
+                    tr.innerHTML = `
+                        <td class="p-3 text-center border-r border-gray-100">
+                            <span class="px-2.5 py-0.5 rounded-md font-bold ${badgeClass}">
+                                ${f} 层
+                            </span>
+                        </td>
+                        ${roomsTdListHtml}
+                        <td class="p-3 border-l border-gray-100 text-center">
+                            <div class="flex flex-col items-center justify-center">
+                                <span class="text-xs font-bold text-gray-500 mb-1">${paidInFloor}/5 已交</span>
+                                <div class="w-16 bg-gray-200 rounded-full h-1 overflow-hidden">
+                                    <div class="h-1 rounded-full ${progressColor} transition-all duration-300" style="width: ${progressPercent}%"></div>
+                                </div>
+                            </div>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                }
+            }
+
+            // 无匹配数据警告切换显示
+            const noData = document.getElementById('no-data-row');
+            if (visibleRowsCount === 0) {
+                noData.classList.remove('hidden');
+            } else {
+                noData.classList.add('hidden');
+            }
+        }
+
+        // 统一页面刷新
+        function updateUI() {
+            updateStats();
+            renderGrid();
+        }
+
+        // 复制为 CSV 数据
+        function copyCSV() {
+            let csvText = "\uFEFF楼层,01室,02室,03室,04室,05室,已出资户数,未出资户数,出资比率\n";
+            for (let f = 1; f <= maxFloor; f++) {
+                if (isExcludedFloor(f)) {
+                    continue;
+                }
+                const row = [`${f}层`];
+                let pCount = 0;
+                suffixes.forEach(s => {
+                    const roomNum = `${f}${s}`;
+                    const isPaid = paidRooms.has(roomNum);
+                    row.push(isPaid ? "已出资" : "未出资");
+                    if (isPaid) pCount++;
+                });
+                row.push(pCount, 5 - pCount, `${((pCount / 5) * 100).toFixed(0)}%`);
+                csvText += row.join(",") + "\n";
+            }
+
+            const area = document.createElement('textarea');
+            area.value = csvText;
+            document.body.appendChild(area);
+            area.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    const copyBtnText = document.getElementById('copy-btn-text');
+                    copyBtnText.innerText = "复制成功！直接贴到Excel即可";
+                    setTimeout(() => {
+                        copyBtnText.innerText = "复制数据 (CSV格式)";
+                    }, 2000);
+                } else {
+                    alert('自动复制异常，您的系统不支持此指令。');
+                }
+            } catch (err) {
+                alert('复制失败，请重试！');
+            }
+            document.body.removeChild(area);
+        }
+
+        // 页面初始化渲染执行
+        updateUI();
+    </script>
+</body>
+</html>
