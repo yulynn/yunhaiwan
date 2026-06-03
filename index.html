@@ -37,7 +37,7 @@
                     <!-- 截止时间标签 -->
                     <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200 shadow-sm leading-none">
                         <span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
-                        数据截止：2026-06-02
+                        数据截止：2026-06-03
                     </span>
                 </h2>
                 <p class="text-xs text-gray-500 mt-1.5">
@@ -70,7 +70,7 @@
         </div>
 
         <!-- 特殊层排除说明横幅 -->
-        <div class="px-6 py-2.5 bg-yellow-50 border-b border-yellow-100 text-yellow-800 text-xs flex items-center gap-2">
+        <div class="px-6 py-2.5 bg-yellow-50 border-b border-yellow-105 text-yellow-800 text-xs flex items-center gap-2">
             <svg class="w-4 h-4 text-yellow-600 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
             </svg>
@@ -86,13 +86,13 @@
             <div class="bg-gray-50 p-4 rounded-xl border border-gray-155 flex flex-col justify-between shadow-sm">
                 <span class="text-xs font-semibold text-green-500 uppercase">已出资户数</span>
                 <div class="flex items-baseline gap-1 mt-1">
-                    <span class="text-xl font-bold text-green-600" id="stat-paid">125户</span>
-                    <span class="text-xs text-gray-400" id="stat-paid-ratio">(56.8%)</span>
+                    <span class="text-xl font-bold text-green-600" id="stat-paid">131户</span>
+                    <span class="text-xs text-gray-400" id="stat-paid-ratio">(59.5%)</span>
                 </div>
             </div>
             <div class="bg-gray-50 p-4 rounded-xl border border-gray-150 flex flex-col justify-between shadow-sm">
                 <span class="text-xs font-semibold text-red-500 uppercase">未出资户数</span>
-                <span class="text-xl font-bold text-red-600 mt-1" id="stat-unpaid">95户</span>
+                <span class="text-xl font-bold text-red-650 mt-1" id="stat-unpaid">89户</span>
             </div>
             <!-- 支持手动编辑的文本框 -->
             <div class="bg-gray-900 text-white p-4 rounded-xl flex flex-col justify-between shadow-sm group">
@@ -107,7 +107,7 @@
                     <input
                         type="text"
                         id="stat-amount-input"
-                        value="247,003.11"
+                        value="257,003.11"
                         oninput="saveAmount(this.value)"
                         class="bg-transparent focus:outline-none text-xl font-bold w-full text-white placeholder-gray-650"
                         placeholder="支持输入任意金额"
@@ -158,7 +158,7 @@
                         <th class="p-3 text-center font-bold text-gray-500">02室</th>
                         <th class="p-3 text-center font-bold text-gray-500">03室</th>
                         <th class="p-3 text-center font-bold text-gray-500">04室</th>
-                        <th class="p-3 text-center font-bold text-gray-500">05室</th>
+                        <th class="p-3 text-center font-bold text-gray-505">05室</th>
                         <th class="p-3 text-center font-bold text-gray-500 w-28">出资进度</th>
                     </tr>
                 </thead>
@@ -178,7 +178,7 @@
                 <svg class="h-4 w-4 text-indigo-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
-                <span><strong>手动修改金额：</strong>由于每户出资金额稍有区别，右侧账面筹集金额框现在支持任意修改（例如输入 247,000 元）。修改后刷新网页金额也是最新的。</span>
+                <span><strong>手动修改金额：</strong>由于每户出资金额稍有区别，右侧账面筹集金额框现在支持任意修改（例如输入 257,003.11 元）。修改后刷新网页金额也是最新的。</span>
             </div>
             <div class="flex items-center gap-2">
                 <svg class="h-4 w-4 text-green-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -191,19 +191,20 @@
     </div>
 
     <script>
-        // 核心登记的 125 户原始房号数据 (来自导入图片表格的序号1-125)
+        // 核心登记的 131 户原始房号数据 (数据截止 2026-06-03)
         const ORIGINAL_PAID_LIST = [
-            "2801", "1805", "2305", "4705", "1701", "3002", "4402", "1803", "1203", "2205", "1204", "1003", 
-            "1001", "3904", "3604", "2703", "3105", "3705", "404", "4403", "4003", "3302", "1101", "3605", 
-            "2905", "1105", "4305", "4004", "3304", "3803", "2303", "4001", "4503", "3401", "1801", "2701",
-            "4101", "1202", "1705", "1201", "402", "3303", "3602", "2102", "3903", "4104", "2501", "3103", 
-            "2203", "2603", "3902", "604", "2904", "2302", "1302", "4201", "4005", "4202", "4502", "3502", 
-            "505", "4204", "4301", "3504", "1905", "3804", "1305", "901", "1104", "3403", "2104", "2204",
-            "2301", "4103", "704", "2402", "3703", "4405", "1604", "3802", "2005", "1903", "3004", "1602", 
-            "4501", "2903", "2802", "3601", "4504", "4002", "4205", "2901", "1402", "2505", "2003", "405", 
-            "2503", "2004", "1605", "1703", "4803", "1403", "2804", "2705", "502", "2602", "3805", "4603",
-            "2401", "4604", "803", "2803", "2805", "1802", "3305", "4401", "905", "1603", "4203", "4404", 
-            "802", "3104", "602", "3704", "1901"
+            "402", "404", "405", "502", "505", "602", "604", "704", "802", "803", 
+            "901", "905", "1001", "1003", "1101", "1104", "1105", "1201", "1202", "1203", "1204", 
+            "1302", "1305", "1402", "1403", "1602", "1603", "1604", "1605", "1701", "1702", "1703", 
+            "1704", "1705", "1801", "1802", "1803", "1805", "1901", "1903", "1904", "1905", "2003", 
+            "2004", "2005", "2102", "2104", "2203", "2204", "2205", "2301", "2302", "2303", "2305", 
+            "2401", "2402", "2403", "2501", "2502", "2503", "2505", "2602", "2603", "2701", "2703", 
+            "2705", "2801", "2802", "2803", "2804", "2805", "2901", "2903", "2904", "2905", "3002", 
+            "3004", "3103", "3104", "3105", "3302", "3303", "3304", "3305", "3401", "3403", "3502", 
+            "3504", "3601", "3602", "3604", "3605", "3703", "3704", "3705", "3802", "3803", "3804", 
+            "3805", "3902", "3903", "3904", "4001", "4002", "4003", "4004", "4005", "4101", "4103", 
+            "4104", "4201", "4202", "4203", "4204", "4205", "4301", "4305", "4401", "4402", "4403", 
+            "4404", "4405", "4501", "4502", "4503", "4504", "4603", "4604", "4703", "4705", "4803"
         ];
 
         // 排除楼层设定: 1-2层 (特殊层), 15层, 32层 (避难层)
@@ -231,8 +232,8 @@
             updateUI();
         }
 
-        // 账面资金：初始化先尝试读取已存的数据，若无则使用默认初始金 247,003.11
-        let totalAmountVal = localStorage.getItem('manually_saved_total_amount') || '247,003.11';
+        // 账面资金：数据截止 2026-06-03 时的默认金额
+        let totalAmountVal = localStorage.getItem('manually_saved_total_amount') || '257,003.11';
 
         // 监听并实时存储输入的账面数字到本地缓存
         function saveAmount(val) {
@@ -262,14 +263,14 @@
             renderGrid();
         }
 
-        // 恢复至原始图片设定与初始金额
+        // 恢复至原始设定与初始金额
         function resetToOriginal() {
-            if (confirm("确定要回归初始登记出资状态，并将账面金额恢复至初始的 ¥247,003.11 吗？")) {
+            if (confirm("确定要回归初始登记出资状态，并将账面金额恢复至初始的 ¥257,003.11 吗？")) {
                 paidRooms = new Set(ORIGINAL_PAID_LIST);
                 document.getElementById('search-input').value = '';
                 searchQuery = '';
                 
-                totalAmountVal = '247,003.11';
+                totalAmountVal = '257,003.11';
                 localStorage.setItem('manually_saved_total_amount', totalAmountVal);
                 document.getElementById('stat-amount-input').value = totalAmountVal;
 
@@ -292,172 +293,4 @@
             const unpaidCount = totalParticipatingRooms - activePaidCount;
             const ratio = ((activePaidCount / totalParticipatingRooms) * 100).toFixed(1);
 
-            document.getElementById('stat-total-label').innerText = `${48 - EXCLUDED_FLOORS.length}层 / ${totalParticipatingRooms}户`;
-            document.getElementById('stat-paid').innerText = `${activePaidCount} 户`;
-            document.getElementById('stat-paid-ratio').innerText = `(${ratio}%)`;
-            document.getElementById('stat-unpaid').innerText = `${unpaidCount} 户`;
-            
-            // 保证输入框加载正确的值
-            document.getElementById('stat-amount-input').value = totalAmountVal;
-        }
-
-        // 渲染主楼宇表格网格
-        function renderGrid() {
-            const tbody = document.getElementById('grid-rows');
-            tbody.innerHTML = '';
-            
-            let visibleRowsCount = 0;
-
-            for (let f = maxFloor; f >= 1; f--) {
-                // 如果是排除的特殊楼层，不予渲染
-                if (isExcludedFloor(f)) {
-                    continue;
-                }
-
-                const floorRooms = suffixes.map(s => `${f}${s}`);
-                
-                // 计算当前楼层的已交费户数
-                const paidInFloor = floorRooms.filter(r => paidRooms.has(r)).length;
-
-                // 1. 出资率过滤逻辑条件过滤
-                let matchesFilter = true;
-                if (filterType === 'hasUnpaid') {
-                    matchesFilter = paidInFloor < 5;
-                } else if (filterType === 'allPaid') {
-                    matchesFilter = paidInFloor === 5;
-                } else if (filterType === 'nonePaid') {
-                    matchesFilter = paidInFloor === 0;
-                }
-
-                // 2. 搜索框房号查询逻辑过滤（支持 0404 模糊匹配 404）
-                let matchesSearch = true;
-                if (searchQuery !== '') {
-                    // 若用户输入带有前导 0，如 0404，转为 404 用于匹配
-                    const processedQuery = searchQuery.startsWith('0') ? searchQuery.substring(1) : searchQuery;
-                    matchesSearch = floorRooms.some(r => r.includes(searchQuery) || r.includes(processedQuery));
-                }
-
-                // 符合展示逻辑的渲染
-                if (matchesFilter && matchesSearch) {
-                    visibleRowsCount++;
-                    const tr = document.createElement('tr');
-                    tr.className = "hover:bg-gray-50 border-b border-gray-100 transition-colors";
-                    
-                    let roomsTdListHtml = '';
-                    floorRooms.forEach(roomNum => {
-                        const isPaid = paidRooms.has(roomNum);
-                        
-                        // 高亮检索样式
-                        const processedQuery = searchQuery.startsWith('0') ? searchQuery.substring(1) : searchQuery;
-                        const isHighlighted = searchQuery !== '' && (roomNum.includes(searchQuery) || roomNum.includes(processedQuery));
-                        const boxHighlight = isHighlighted ? 'ring-2 ring-indigo-500 ring-offset-1' : '';
-                        
-                        roomsTdListHtml += `
-                            <td class="p-2 text-center">
-                                <button onclick="toggleRoom('${roomNum}')" 
-                                    class="w-full py-2 px-1 relative transition-all rounded-lg border text-xs font-semibold ${boxHighlight} ${
-                                        isPaid 
-                                        ? 'bg-green-50 text-green-700 border-green-200 hover:bg-green-100 hover:border-green-300' 
-                                        : 'bg-gray-55 text-gray-400 border-gray-200 border-dashed hover:bg-gray-100 hover:text-gray-650'
-                                    }"
-                                >
-                                    <div class="flex items-center justify-center gap-1">
-                                        <span>${roomNum}</span>
-                                        ${isPaid 
-                                            ? '<svg class="w-3.5 h-3.5 text-green-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>'
-                                            : '<span class="w-1.5 h-1.5 rounded-full bg-gray-300"></span>'
-                                        }
-                                    </div>
-                                </button>
-                            </td>
-                        `;
-                    });
-
-                    // 进度样式配置
-                    const progressPercent = (paidInFloor / 5) * 100;
-                    const progressColor = paidInFloor === 5 ? 'bg-green-500' : 'bg-indigo-505';
-                    const badgeClass = paidInFloor === 5 ? 'bg-green-100 text-green-800' : 
-                                       paidInFloor === 0 ? 'bg-gray-100 text-gray-500' : 'bg-indigo-50 text-indigo-800';
-
-                    tr.innerHTML = `
-                        <td class="p-3 text-center border-r border-gray-100">
-                            <span class="px-2.5 py-0.5 rounded-md font-bold ${badgeClass}">
-                                ${f} 层
-                            </span>
-                        </td>
-                        ${roomsTdListHtml}
-                        <td class="p-3 border-l border-gray-100 text-center">
-                            <div class="flex flex-col items-center justify-center">
-                                <span class="text-xs font-bold text-gray-500 mb-1">${paidInFloor}/5 已交</span>
-                                <div class="w-16 bg-gray-200 rounded-full h-1 overflow-hidden">
-                                    <div class="h-1 rounded-full ${progressColor} transition-all duration-300" style="width: ${progressPercent}%"></div>
-                                </div>
-                            </div>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                }
-            }
-
-            // 无匹配数据警告切换显示
-            const noData = document.getElementById('no-data-row');
-            if (visibleRowsCount === 0) {
-                noData.classList.remove('hidden');
-            } else {
-                noData.classList.add('hidden');
-            }
-        }
-
-        // 统一页面刷新
-        function updateUI() {
-            updateStats();
-            renderGrid();
-        }
-
-        // 复制为 Excel 可以粘贴的 CSV 数据 (自动过滤排除层)
-        function copyCSV() {
-            let csvText = "\uFEFF楼层,01室,02室,03室,04室,05室,已出资户数,未出资户数,出资比率\n";
-            for (let f = 1; f <= maxFloor; f++) {
-                // 跳过特殊层不进入导出表
-                if (isExcludedFloor(f)) {
-                    continue;
-                }
-                const row = [`${f}层`];
-                let pCount = 0;
-                suffixes.forEach(s => {
-                    const roomNum = `${f}${s}`;
-                    const isPaid = paidRooms.has(roomNum);
-                    row.push(isPaid ? "已出资" : "未出资");
-                    if (isPaid) pCount++;
-                });
-                row.push(pCount, 5 - pCount, `${((pCount / 5) * 100).toFixed(0)}%`);
-                csvText += row.join(",") + "\n";
-            }
-
-            const area = document.createElement('textarea');
-            area.value = csvText;
-            document.body.appendChild(area);
-            area.select();
-            
-            try {
-                const successful = document.execCommand('copy');
-                if (successful) {
-                    const copyBtnText = document.getElementById('copy-btn-text');
-                    copyBtnText.innerText = "复制成功！直接贴到Excel即可";
-                    setTimeout(() => {
-                        copyBtnText.innerText = "复制数据 (CSV格式)";
-                    }, 2000);
-                } else {
-                    alert('自动复制异常，您的系统不支持此指令。');
-                }
-            } catch (err) {
-                alert('复制失败，请重试！');
-            }
-            document.body.removeChild(area);
-        }
-
-        // 页面初始化渲染执行
-        updateUI();
-    </script>
-</body>
-</html>
+            document.getElementById('stat-total-label').innerText = `${48 - EXCLUDED_FLOORS.length
