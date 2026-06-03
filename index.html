@@ -191,15 +191,15 @@
     </div>
 
     <script>
-        // 【版本控制系统】如果检测到代码版本升级，直接清除本地缓存的金额数据，实现自动同步更新。
-        const DATA_VERSION = "2026_06_03_v3_final";
+        // 【版本控制系统】如果检测到代码版本升级（比如本次更正了35层数据），直接清除本地缓存的金额数据，实现自动同步更新。
+        const DATA_VERSION = "2026_06_03_v4_final";
         const savedVersion = localStorage.getItem('app_data_version');
         if (savedVersion !== DATA_VERSION) {
             localStorage.setItem('app_data_version', DATA_VERSION);
             localStorage.setItem('manually_saved_total_amount', '257,003.11'); // 触发强制金额重置
         }
 
-        // 核心登记的 131 户原始房号数据 (数据截止 2026-06-03)
+        // 核心登记的 131 户原始房号数据 (数据截止 2026-06-03，35层已更正为 3503, 3504)
         const ORIGINAL_PAID_LIST = [
             "402", "404", "405", "502", "505", "602", "604", "704", "802", "803", 
             "901", "905", "1001", "1003", "1101", "1104", "1105", "1201", "1202", "1203", "1204", 
@@ -208,7 +208,7 @@
             "2004", "2005", "2102", "2104", "2203", "2204", "2205", "2301", "2302", "2303", "2305", 
             "2401", "2402", "2403", "2501", "2502", "2503", "2505", "2602", "2603", "2701", "2703", 
             "2705", "2801", "2802", "2803", "2804", "2805", "2901", "2903", "2904", "2905", "3002", 
-            "3004", "3103", "3104", "3105", "3302", "3303", "3304", "3305", "3401", "3403", "3502", 
+            "3004", "3103", "3104", "3105", "3302", "3303", "3304", "3305", "3401", "3403", "3503", 
             "3504", "3601", "3602", "3604", "3605", "3703", "3704", "3705", "3802", "3803", "3804", 
             "3805", "3902", "3903", "3904", "4001", "4002", "4003", "4004", "4005", "4101", "4103", 
             "4104", "4201", "4202", "4203", "4204", "4205", "4301", "4305", "4401", "4402", "4403", 
@@ -366,7 +366,7 @@
                                     class="w-full py-2 px-1 relative transition-all rounded-lg border text-xs font-semibold ${boxHighlight} ${
                                         isPaid 
                                         ? 'bg-green-50 text-green-700 border-green-200 hover:bg-green-100 hover:border-green-300' 
-                                        : 'bg-gray-55 text-gray-400 border-gray-200 border-dashed hover:bg-gray-100 hover:text-gray-650'
+                                        : 'bg-gray-55 text-gray-400 border-gray-200 border-dashed hover:bg-gray-100 hover:text-gray-655'
                                     }"
                                 >
                                     <div class="flex items-center justify-center gap-1">
